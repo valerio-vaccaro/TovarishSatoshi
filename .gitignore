@@ -50,6 +50,11 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+.pio/
+.vscode/
+compile_commands.json
+dist/
+__pycache__/
 
 # debug information files
 *.dwo
