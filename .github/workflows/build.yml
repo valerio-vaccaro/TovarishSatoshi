@@ -1,5 +1,8 @@
 name: Build firmware
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [main]
@@ -28,3 +31,30 @@ jobs:
           name: tovarishsatoshi-firmware
           path: dist/
           if-no-files-found: error
+
+  publish-docs:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Build documentation site
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./docs
+          destination: ./_site
+      - name: Upload documentation site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+      - name: Publish documentation
+        id: deployment
+        uses: actions/deploy-pages@v4
